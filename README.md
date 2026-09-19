@@ -1,1 +1,796 @@
-# alco-colculeayor
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>TUCSON III // ALCO_TRACKER</title>
+    <style>
+        /* Глобальные стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #05080c;
+            color: #00f0ff;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(5, 8, 12, 0.9);
+            padding: 20px;
+            border: 1px solid #00f0ff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+            margin: 10px;
+        }
+
+        header h1 {
+            color: #39ff14;
+            text-align: center;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px #39ff14;
+            margin-bottom: 20px;
+            word-break: break-word;
+        }
+
+        section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        .field {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+
+        .field label {
+            min-width: 140px;
+            font-weight: bold;
+            color: #00f0ff;
+            font-size: 0.95rem;
+        }
+
+        .field input,
+        .field select {
+            background: #0a121c;
+            border: 1px solid #00f0ff;
+            color: #00f0ff;
+            padding: 8px 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            flex: 1;
+            min-width: 100px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: #39ff14;
+            box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+        }
+
+        .field input[type="radio"] {
+            flex: 0 0 auto;
+            margin: 0 5px 0 10px;
+            accent-color: #00f0ff;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .field input[type="radio"]:first-of-type {
+            margin-left: 0;
+        }
+
+        .field .radio-group {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid #00f0ff;
+            color: #00f0ff;
+            padding: 8px 18px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: #00f0ff;
+            color: #05080c;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        #add-btn {
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .drink-table {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            padding: 8px 6px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+        }
+
+        th {
+            color: #39ff14;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        td {
+            color: #00f0ff;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: #ff3b3b;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: 0.2s;
+        }
+
+        .delete-btn:hover {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px #ff3b3b;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .actions button {
+            flex: 1;
+            min-width: 120px;
+            background: #00f0ff;
+            color: #05080c;
+            font-weight: bold;
+        }
+
+        .actions button:hover {
+            background: #39ff14;
+            border-color: #39ff14;
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.5);
+        }
+
+        .results {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid #00f0ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 5px;
+        }
+
+        .result-item {
+            padding: 6px 0;
+            font-size: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .result-item .label {
+            font-weight: bold;
+            color: #00f0ff;
+            min-width: 180px;
+        }
+
+        .result-item .value {
+            color: #39ff14;
+            font-weight: bold;
+        }
+
+        .result-item .value.danger {
+            color: #ff3b3b;
+            text-shadow: 0 0 10px #ff3b3b;
+        }
+
+        .result-item .value.zero {
+            color: #39ff14;
+        }
+
+        .warning {
+            background: rgba(255, 59, 59, 0.15);
+            border: 1px solid #ff3b3b;
+            padding: 10px;
+            border-radius: 4px;
+            color: #ff3b3b;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .warning.active {
+            display: block;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #05080c;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00f0ff;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #39ff14;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+                margin: 0;
+            }
+
+            header h1 {
+                font-size: 1.4rem;
+            }
+
+            .field {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .field label {
+                min-width: unset;
+                margin-bottom: 2px;
+            }
+
+            .field input,
+            .field select {
+                width: 100%;
+                min-width: unset;
+            }
+
+            .field .radio-group {
+                justify-content: flex-start;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .actions button {
+                width: 100%;
+            }
+
+            .result-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .result-item .label {
+                min-width: unset;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            th,
+            td {
+                padding: 6px 4px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            header h1 {
+                font-size: 1.1rem;
+            }
+
+            .field label {
+                font-size: 0.85rem;
+            }
+
+            button {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⧩ TUCSON III // ALCO_TRACKER</h1>
+        </header>
+
+        <!-- Данные пользователя -->
+        <section class="user-data">
+            <div class="field">
+                <label>Пол:</label>
+                <div class="radio-group">
+                    <input type="radio" name="gender" value="male" checked id="gender-male">
+                    <label for="gender-male">Мужской</label>
+                    <input type="radio" name="gender" value="female" id="gender-female">
+                    <label for="gender-female">Женский</label>
+                </div>
+            </div>
+            <div class="field">
+                <label for="age">Возраст (лет):</label>
+                <input type="number" id="age" value="30" min="1" max="120">
+            </div>
+            <div class="field">
+                <label for="height">Рост (см):</label>
+                <input type="number" id="height" value="175" min="1" max="250">
+            </div>
+            <div class="field">
+                <label for="weight">Вес (кг):</label>
+                <input type="number" id="weight" value="75" min="1" max="300">
+            </div>
+        </section>
+
+        <!-- Добавление напитка -->
+        <section class="add-drink">
+            <div class="field">
+                <label for="drink-select">Напиток:</label>
+                <select id="drink-select"></select>
+            </div>
+            <div class="field">
+                <label for="abv-input">Крепость (%):</label>
+                <input type="number" id="abv-input" step="0.1" value="40" min="0" max="100">
+            </div>
+            <div class="field">
+                <label for="volume-input">Объем (мл):</label>
+                <input type="number" id="volume-input" value="100" min="1" step="1">
+            </div>
+            <button id="add-btn">+ Добавить в список</button>
+        </section>
+
+        <!-- Таблица напитков -->
+        <section class="drink-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Напиток</th>
+                        <th>Крепость</th>
+                        <th>Объем</th>
+                        <th style="text-align:center;">✕</th>
+                    </tr>
+                </thead>
+                <tbody id="drink-list">
+                    <!-- строки будут добавлены JS -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Тайминги -->
+        <section class="timing">
+            <div class="field">
+                <label for="duration">Сколько длилось застолье (часов):</label>
+                <input type="number" id="duration" value="2" min="0" step="0.5">
+            </div>
+            <div class="field">
+                <label for="end-time">Когда завершилось распитие:</label>
+                <select id="end-time">
+                    <option value="0">Только что</option>
+                    <option value="1">1 час назад</option>
+                    <option value="2" selected>2 часа назад</option>
+                    <option value="4">4 часа назад</option>
+                    <option value="8">8 часов назад</option>
+                    <option value="12">12 часов назад</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Кнопка расчета -->
+        <section class="actions">
+            <button id="calc-btn">⟳ Рассчитать</button>
+        </section>
+
+        <!-- Результаты -->
+        <section class="results">
+            <div class="result-item">
+                <span class="label">Текущая концентрация:</span>
+                <span class="value zero" id="promille-value">0.00 ‰</span>
+            </div>
+            <div class="result-item">
+                <span class="label">Статус:</span>
+                <span class="value zero" id="status-text">ТРЕЗВ</span>
+            </div>
+            <div class="result-item">
+                <span class="label">Оставшееся время до 0.00 ‰:</span>
+                <span class="value" id="remaining-time">0 ч. 00 мин.</span>
+            </div>
+            <div class="result-item">
+                <span class="label">Ориентировочное время отрезвления:</span>
+                <span class="value" id="exact-time-text">—</span>
+            </div>
+            <div id="warning" class="warning">⛔ ВНИМАНИЕ! Управление автомобилем Tucson 3 запрещено! ⛔</div>
+        </section>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. БАЗА НАПИТКОВ (ТОП-30)
+        // ============================================================
+        const drinksDB = [
+            { name: 'Водка', abv: 40 },
+            { name: 'Пиво светлое', abv: 4.5 },
+            { name: 'Пиво тёмное', abv: 5 },
+            { name: 'Самогон', abv: 50 },
+            { name: 'Коньяк', abv: 40 },
+            { name: 'Виски', abv: 40 },
+            { name: 'Вино сухое', abv: 12 },
+            { name: 'Вино полусладкое', abv: 12 },
+            { name: 'Шампанское', abv: 11 },
+            { name: 'Вермут', abv: 18 },
+            { name: 'Настойка (травяная)', abv: 25 },
+            { name: 'Ликёр (Амаретто)', abv: 20 },
+            { name: 'Абсент', abv: 70 },
+            { name: 'Сидр', abv: 5 },
+            { name: 'Виски-Кола (банка)', abv: 7 },
+            { name: 'Джин-Тоник (банка)', abv: 5 },
+            { name: 'Ром', abv: 40 },
+            { name: 'Текила', abv: 38 },
+            { name: 'Джин', abv: 40 },
+            { name: 'Бренди', abv: 40 },
+            { name: 'Самбука', abv: 40 },
+            { name: 'Бейлиз', abv: 17 },
+            { name: 'Кампари', abv: 25 },
+            { name: 'Мартини', abv: 18 },
+            { name: 'Портвейн', abv: 20 },
+            { name: 'Херес', abv: 15 },
+            { name: 'Саке', abv: 15 },
+            { name: 'Пиво безалкогольное', abv: 0.5 },
+            { name: 'Квас (креплёный)', abv: 1 },
+            { name: 'Энергетик с алкоголем', abv: 7 }
+        ];
+
+        // ============================================================
+        // 2. СОСТОЯНИЕ
+        // ============================================================
+        let drinksList = []; // массив { name, abv, volume }
+
+        // ============================================================
+        // 3. DOM-ссылки
+        // ============================================================
+        const drinkSelect = document.getElementById('drink-select');
+        const abvInput = document.getElementById('abv-input');
+        const volumeInput = document.getElementById('volume-input');
+        const addBtn = document.getElementById('add-btn');
+        const drinkListTbody = document.getElementById('drink-list');
+        const ageInput = document.getElementById('age');
+        const heightInput = document.getElementById('height'); // не используется в расчётах, но сохраняем
+        const weightInput = document.getElementById('weight');
+        const durationInput = document.getElementById('duration');
+        const endTimeSelect = document.getElementById('end-time');
+        const calcBtn = document.getElementById('calc-btn');
+
+        const promilleSpan = document.getElementById('promille-value');
+        const statusSpan = document.getElementById('status-text');
+        const remainingSpan = document.getElementById('remaining-time');
+        const exactTimeSpan = document.getElementById('exact-time-text');
+        const warningDiv = document.getElementById('warning');
+
+        // ============================================================
+        // 4. ИНИЦИАЛИЗАЦИЯ SELECT
+        // ============================================================
+        function populateDrinkSelect() {
+            drinkSelect.innerHTML = '';
+            drinksDB.forEach((d, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${d.name} (${d.abv}%)`;
+                drinkSelect.appendChild(opt);
+            });
+            // установить крепость по умолчанию
+            updateAbvFromSelect();
+        }
+
+        function updateAbvFromSelect() {
+            const idx = parseInt(drinkSelect.value);
+            if (!isNaN(idx) && idx >= 0 && idx < drinksDB.length) {
+                abvInput.value = drinksDB[idx].abv;
+            }
+        }
+
+        drinkSelect.addEventListener('change', updateAbvFromSelect);
+
+        // ============================================================
+        // 5. УПРАВЛЕНИЕ СПИСКОМ НАПИТКОВ
+        // ============================================================
+        function renderDrinkList() {
+            drinkListTbody.innerHTML = '';
+            drinksList.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.abv}%</td>
+                    <td>${item.volume} мл</td>
+                    <td style="text-align:center;">
+                        <button class="delete-btn" data-index="${index}">✕</button>
+                    </td>
+                `;
+                drinkListTbody.appendChild(tr);
+            });
+
+            // Обработчики удаления
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index);
+                    drinksList.splice(idx, 1);
+                    renderDrinkList();
+                    updateResults();
+                });
+            });
+        }
+
+        function addDrink() {
+            const idx = parseInt(drinkSelect.value);
+            if (isNaN(idx) || idx < 0 || idx >= drinksDB.length) {
+                alert('Выберите напиток из списка.');
+                return;
+            }
+            const name = drinksDB[idx].name;
+            const abv = parseFloat(abvInput.value);
+            const volume = parseFloat(volumeInput.value);
+            if (isNaN(abv) || abv < 0 || abv > 100) {
+                alert('Введите корректную крепость (0–100).');
+                return;
+            }
+            if (isNaN(volume) || volume <= 0) {
+                alert('Введите положительный объём (мл).');
+                return;
+            }
+            drinksList.push({ name, abv, volume });
+            renderDrinkList();
+            updateResults();
+            // Сбросить объем на 100
+            volumeInput.value = 100;
+        }
+
+        addBtn.addEventListener('click', addDrink);
+
+        // Добавление по Enter в полях (удобство)
+        volumeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') addDrink();
+        });
+        abvInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') addDrink();
+        });
+
+        // ============================================================
+        // 6. РАСЧЁТ
+        // ============================================================
+        function updateResults() {
+            // --- Чтение данных ---
+            const genderMale = document.getElementById('gender-male').checked;
+            const gender = genderMale ? 'male' : 'female';
+            const age = parseInt(ageInput.value) || 0;
+            const weight = parseFloat(weightInput.value) || 0;
+            const duration = parseFloat(durationInput.value) || 0;
+            const hoursAgo = parseInt(endTimeSelect.value) || 0;
+
+            // --- Проверка обязательных ---
+            if (!weight || weight <= 0) {
+                // Не все данные, показываем прочерк
+                setResultsZero();
+                return;
+            }
+
+            if (drinksList.length === 0) {
+                setResultsZero();
+                return;
+            }
+
+            // --- Суммарный этанол (г) ---
+            let totalEthanol = 0;
+            drinksList.forEach(item => {
+                const volume = item.volume || 0;
+                const abv = item.abv || 0;
+                // масса этанола = объем * (крепость/100) * 0.79
+                totalEthanol += volume * (abv / 100) * 0.79;
+            });
+
+            // --- Коэффициент редукции r ---
+            let r = gender === 'male' ? 0.68 : 0.55;
+            if (age > 60) {
+                r = Math.max(0.1, r - 0.05); // не даём уйти в ноль
+            }
+
+            // --- Пиковое промилле (с учётом 10% потерь) ---
+            const C_peak = (totalEthanol * 0.9) / (weight * r);
+
+            // --- Общее время (часы) с начала застолья до текущего момента ---
+            const totalHours = duration + hoursAgo;
+
+            // --- Скорость выведения (‰/час) ---
+            const beta = 0.13;
+
+            // --- Текущее промилле ---
+            let C_current = C_peak - beta * totalHours;
+            if (C_current < 0) C_current = 0;
+
+            // --- Оставшееся время до нуля (часы) ---
+            let remainingHours = 0;
+            if (C_current > 0) {
+                remainingHours = C_current / beta;
+            }
+
+            // --- Время отрезвления ---
+            const now = new Date();
+            const future = new Date(now.getTime() + remainingHours * 3600 * 1000);
+
+            // --- Отображение ---
+
+            // Промилле
+            const promilleVal = C_current;
+            promilleSpan.textContent = promilleVal.toFixed(2) + ' ‰';
+            promilleSpan.className = 'value';
+            if (promilleVal === 0) {
+                promilleSpan.classList.add('zero');
+            } else {
+                promilleSpan.classList.add('danger');
+            }
+
+            // Статус
+            let status = '';
+            if (promilleVal === 0) {
+                status = 'ТРЕЗВ';
+            } else if (promilleVal < 0.5) {
+                status = 'ЛЕГКОЕ ОПЬЯНЕНИЕ';
+            } else if (promilleVal < 1.5) {
+                status = 'СРЕДНЕЕ ОПЬЯНЕНИЕ';
+            } else {
+                status = 'СИЛЬНОЕ ОПЬЯНЕНИЕ';
+            }
+            statusSpan.textContent = status;
+            statusSpan.className = 'value';
+            if (promilleVal === 0) {
+                statusSpan.classList.add('zero');
+            } else {
+                statusSpan.classList.add('danger');
+            }
+
+            // Оставшееся время
+            if (remainingHours === 0) {
+                remainingSpan.textContent = '0 ч. 00 мин.';
+            } else {
+                const hrs = Math.floor(remainingHours);
+                const mins = Math.round((remainingHours - hrs) * 60);
+                remainingSpan.textContent = `${hrs} ч. ${mins.toString().padStart(2, '0')} мин.`;
+            }
+
+            // Точное время отрезвления
+            if (remainingHours === 0) {
+                exactTimeSpan.textContent = 'Уже трезв';
+            } else {
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+
+                let dayStr = '';
+                if (future.toDateString() === today.toDateString()) {
+                    dayStr = 'сегодня';
+                } else if (future.toDateString() === tomorrow.toDateString()) {
+                    dayStr = 'завтра';
+                } else {
+                    // если больше чем через день, показываем дату
+                    dayStr = future.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+                }
+                const timeStr = future.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                exactTimeSpan.textContent = `${dayStr} в ${timeStr}`;
+            }
+
+            // Предупреждение
+            if (promilleVal > 0) {
+                warningDiv.classList.add('active');
+            } else {
+                warningDiv.classList.remove('active');
+            }
+        }
+
+        function setResultsZero() {
+            promilleSpan.textContent = '—';
+            promilleSpan.className = 'value zero';
+            statusSpan.textContent = '—';
+            statusSpan.className = 'value';
+            remainingSpan.textContent = '—';
+            exactTimeSpan.textContent = '—';
+            warningDiv.classList.remove('active');
+        }
+
+        // ============================================================
+        // 7. ОБРАБОТЧИКИ СОБЫТИЙ ДЛЯ АВТО-ОБНОВЛЕНИЯ
+        // ============================================================
+        const inputs = [
+            document.querySelector('input[name="gender"]'),
+            ageInput,
+            heightInput,
+            weightInput,
+            durationInput,
+            endTimeSelect,
+            drinkSelect,
+            abvInput,
+            volumeInput
+        ];
+
+        inputs.forEach(el => {
+            if (el) {
+                el.addEventListener('change', updateResults);
+                if (el.type === 'number' || el.type === 'text') {
+                    el.addEventListener('input', updateResults);
+                }
+            }
+        });
+
+        // Кнопка "Рассчитать" тоже вызывает обновление
+        calcBtn.addEventListener('click', updateResults);
+
+        // ============================================================
+        // 8. СТАРТ
+        // ============================================================
+        populateDrinkSelect();
+        // Добавим пару напитков для демонстрации
+        drinksList.push({ name: 'Водка', abv: 40, volume: 100 });
+        drinksList.push({ name: 'Пиво светлое', abv: 4.5, volume: 500 });
+        renderDrinkList();
+        updateResults();
+    </script>
+</body>
+</html>
